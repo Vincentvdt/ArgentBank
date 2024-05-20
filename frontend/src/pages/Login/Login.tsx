@@ -47,19 +47,21 @@ const InputRemember = styled.div`
         margin-left: 0.25rem;
     }
 `;
-const SignInBtn = styled.button`
+const SignInBtn = styled.button<{ $error: boolean }>`
     display: block;
     width: 100%;
     padding: 8px;
     font-size: 1.1rem;
     font-weight: bold;
     margin-top: 1rem;
-    border-color: #00bc77;
-    background-color: #00bc77;
+    border-color: ${props => !props.$error ? "#00bc77" : "red"};
+    background-color: ${props => !props.$error ? "#00bc77" : "red"};
     color: #fff;
 `;
 
 const Login = () => {
+    const [error, setError] = useState(false);
+
     const [formState, setFormState] = useState<{ email: string, password: string }>({
         email: "tony@stark.com",
         password: "password123",
@@ -78,12 +80,14 @@ const Login = () => {
     const [login] = useLoginMutation();
 
     const handleLogin = async (event: React.SyntheticEvent) => {
+        setError(false);
         event.preventDefault();
         try {
             const {token} = await login(formState).unwrap();
             dispatch(setToken({token}));
         } catch (err) {
             console.error("Login failed", err);
+            setError(true);
         }
     };
 
@@ -126,7 +130,7 @@ const Login = () => {
                         <label htmlFor="remember-me">Remember me</label
                         >
                     </InputRemember>
-                    <SignInBtn type="submit">Sign In</SignInBtn>
+                    <SignInBtn type="submit" $error={error}>{!error ? "Sign In" : "Try Again !"}</SignInBtn>
                 </form>
             </LoginSection>
         </MainContainer>
