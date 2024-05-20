@@ -5,7 +5,7 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import { useGetUserProfileQuery, useLoginMutation } from "../../services/userApi";
 import { useNavigate } from "react-router-dom";
-import { resetAuth, selectToken, setToken, setUser } from "../../features/authSlice";
+import { selectToken, setToken, setUser } from "../../features/authSlice";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
 
@@ -92,7 +92,7 @@ const Login = () => {
             dispatch(setUser(userData));
             navigate("/profile");
         }
-    }, [navigate, token, userData]);
+    }, [dispatch, navigate, token, userData]);
 
     if (isLoading) return <div>Loading...</div>;
 
